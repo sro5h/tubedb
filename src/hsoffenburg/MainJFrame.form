@@ -27,10 +27,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnQuit" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btnInit" min="-2" max="-2" attributes="0"/>
+              <Component id="btnInit" pref="469" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnCount" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="332" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="lblInfo" min="-2" pref="256" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
