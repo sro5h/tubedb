@@ -6,6 +6,8 @@
 
 package hsoffenburg;
 
+import javax.swing.Icon;
+
 /**
  *
  * @author ubuntu
@@ -34,6 +36,8 @@ public class MainJFrame extends javax.swing.JFrame {
         btnInit = new javax.swing.JButton();
         lblInfo = new javax.swing.JLabel();
         btnCount = new javax.swing.JButton();
+        btnLoadImage = new javax.swing.JButton();
+        lblImageView = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,19 +64,33 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
+        btnLoadImage.setText("Load image");
+        btnLoadImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadImageActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnQuit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnInit, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCount)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnQuit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnInit, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCount)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -84,7 +102,11 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addComponent(btnInit)
                     .addComponent(lblInfo)
                     .addComponent(btnCount))
-                .addContainerGap(531, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
+                .addComponent(lblImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnLoadImage)
+                .addContainerGap())
         );
 
         pack();
@@ -103,6 +125,11 @@ public class MainJFrame extends javax.swing.JFrame {
         int count = queries.count();
         lblInfo.setText("" + count + " songs exist");
     }//GEN-LAST:event_btnCountActionPerformed
+
+    private void btnLoadImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadImageActionPerformed
+        Icon icon = Converter.loadIconFromFile();
+        lblImageView.setIcon(icon);
+    }//GEN-LAST:event_btnLoadImageActionPerformed
 
     /**
      * @param args the command line arguments
@@ -144,7 +171,9 @@ public class MainJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCount;
     private javax.swing.JButton btnInit;
+    private javax.swing.JButton btnLoadImage;
     private javax.swing.JButton btnQuit;
+    private javax.swing.JLabel lblImageView;
     private javax.swing.JLabel lblInfo;
     // End of variables declaration//GEN-END:variables
 }
