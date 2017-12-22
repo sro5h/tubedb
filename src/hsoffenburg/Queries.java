@@ -54,7 +54,6 @@ public class Queries {
     }
     
     public boolean login(String email, String password) {
-        int count = 0;
         Connection connection = null;
         Statement statement = null;
         ResultSet results = null;
@@ -80,6 +79,36 @@ public class Queries {
         } finally {
             try {
                 if (results != null) results.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+                
+            } catch (SQLException ex) {
+                    Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean register(String email, String password) {
+        Connection connection = null;
+        Statement statement = null;
+        
+        try {
+            connection = Globals.getPoolConnection();
+            statement = connection.createStatement();
+            
+            String query = "INSERT INTO users (email, passwd) " +
+                           "VALUES ('" + email + "', '" + password + "')";
+            System.out.println("Query: " + query);
+            
+            return statement.executeUpdate(query) == 1;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } finally {
+            try {
                 if (statement != null) statement.close();
                 if (connection != null) connection.close();
                 
