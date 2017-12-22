@@ -17,6 +17,8 @@ public class MainJFrame extends javax.swing.JFrame {
      */
     public MainJFrame() {
         initComponents();
+        // Disable resizing
+        setResizable(false);
     }
 
     /**
