@@ -52,4 +52,42 @@ public class Queries {
 
         return count;
     }
+    
+    public boolean login(String email, String password) {
+        int count = 0;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet results = null;
+        
+        try {
+            connection = Globals.getPoolConnection();
+            statement = connection.createStatement();
+            
+            String query = "SELECT * " +
+                           "FROM users u " +
+                           "WHERE u.email = '" + email + "' " +
+                           "AND u.passwd = '" + password +"'";
+            System.out.println("Query: " + query);
+            
+            results = statement.executeQuery(query);
+            
+            // If an entry was returned, the login was successful
+            return results.next();
+            
+            } catch (SQLException ex) {
+            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } finally {
+            try {
+                if (results != null) results.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+                
+            } catch (SQLException ex) {
+                    Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return false;
+    }
 }
