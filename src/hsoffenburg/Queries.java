@@ -18,6 +18,8 @@ import java.util.logging.Logger;
  * @author ubuntu
  */
 public class Queries {
+    private static final String TAG = Queries.class.getName();
+
     public int count() {
         int count = 0;
         Connection connection = null;
@@ -36,8 +38,9 @@ public class Queries {
             results.next();
             count = results.getInt(1);
             
-        } catch (SQLException ex) {
-            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "Count query failed", e);
             
         } finally {
             try {
@@ -45,8 +48,9 @@ public class Queries {
                 if (statement != null) statement.close();
                 if (connection != null) connection.close();
                 
-            } catch (SQLException ex) {
-                    Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException e) {
+                    Logger.getLogger(TAG)
+                            .log(Level.SEVERE, "Cleanup failed", e);
             }
         }
 
@@ -73,8 +77,9 @@ public class Queries {
             // If an entry was returned, the login was successful
             return results.next();
             
-            } catch (SQLException ex) {
-            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "Login query failed", e);
             
         } finally {
             try {
@@ -82,8 +87,9 @@ public class Queries {
                 if (statement != null) statement.close();
                 if (connection != null) connection.close();
                 
-            } catch (SQLException ex) {
-                    Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException e) {
+                    Logger.getLogger(TAG)
+                            .log(Level.SEVERE, "Cleanup failed", e);
             }
         }
         
@@ -104,19 +110,90 @@ public class Queries {
             
             return statement.executeUpdate(query) == 1;
             
-        } catch (SQLException ex) {
-            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "Register query failed", e);
             
         } finally {
             try {
                 if (statement != null) statement.close();
                 if (connection != null) connection.close();
                 
-            } catch (SQLException ex) {
-                    Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException e) {
+                    Logger.getLogger(TAG)
+                            .log(Level.SEVERE, "Cleanup failed", e);
             }
         }
         
         return false;
+    }
+    
+    public Song first(String email) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet results = null;
+        
+        try {
+            connection = Globals.getPoolConnection();
+            statement = createStatement(connection);
+            
+            String query = getSongQuery(email);            
+            System.out.println("Query: " + query);
+            
+            results = statement.executeQuery(query);
+            
+            results.first();
+            return resultsetToSong(results);
+            
+        } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "First query failed", e);
+        
+        } finally {
+            try {
+                if (results != null) results.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+                
+            } catch (SQLException e) {
+                Logger.getLogger(TAG)
+                        .log(Level.SEVERE, "Cleanup failed", e);
+            }
+        }
+        
+        return null;
+    }
+    
+    private String getSongQuery(String email) {
+        String query = "";
+        query += "SELECT t.url, m.title, m.artist, t.tag, t.gefallen, m.cover ";
+        query += "FROM tags t, musics m ";
+        query += "WHERE t.email = '" + email + "' and t.url = m.url";
+        
+        return query;
+    }
+    
+    private Song resultsetToSong(ResultSet set) {
+        try {
+            Song s = new Song();
+            s.url = set.getString(1);
+            s.title = set.getString(2);
+            s.artist = set.getString(3);
+            s.tag = set.getString(4);
+            s.rating = set.getInt(5);
+            
+            return s;
+        
+        } catch(SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "Could not convert the set to a song", e);
+        }
+        
+        return null;
+    }
+    
+    private Statement createStatement(Connection connection) throws SQLException {
+        return connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
     }
 }

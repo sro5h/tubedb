@@ -49,7 +49,7 @@ public class MainJFrame extends javax.swing.JFrame {
         btnPrevious = new javax.swing.JButton();
         txtMusicUrl = new javax.swing.JTextField();
         txtMusicTitle = new javax.swing.JTextField();
-        btnMusicArtist = new javax.swing.JTextField();
+        txtMusicArtist = new javax.swing.JTextField();
         txtMusicTags = new javax.swing.JTextField();
         txtMusicPlay = new javax.swing.JTextField();
         txtMusicRating = new javax.swing.JTextField();
@@ -105,6 +105,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btnFirst.setText("First");
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
 
         bntLast.setText("Last");
 
@@ -162,7 +167,7 @@ public class MainJFrame extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtMusicRating)
                                     .addComponent(txtMusicPlay)))
-                            .addComponent(btnMusicArtist)
+                            .addComponent(txtMusicArtist)
                             .addComponent(txtMusicTitle))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -203,7 +208,7 @@ public class MainJFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtMusicTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnMusicArtist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMusicArtist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtMusicTags, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -242,6 +247,8 @@ public class MainJFrame extends javax.swing.JFrame {
         
         if (queries.login(email, password)) {
             lblInfo.setText("Login successful");
+            this.email = email;
+            this.password = password;
             
         } else {
             lblInfo.setText("Login failed");
@@ -260,6 +267,38 @@ public class MainJFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnRegisterActionPerformed
 
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        if (!checkLoginData()) {
+            return;
+        }
+        
+        Song s = queries.first(email);
+        displaySong(s);
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private boolean checkLoginData() {
+        if (email != null && !email.isEmpty()
+                && password != null && !password.isEmpty()) {
+            return true;
+        }
+        
+        lblInfo.setText("Invalid login data");        
+        return false;
+    }
+    
+    private void displaySong(Song s) {
+        if (s == null) {
+            lblInfo.setText("Displaying song failed");
+            return;
+        }
+        
+        txtMusicUrl.setText(s.url);
+        txtMusicTitle.setText(s.title);
+        txtMusicArtist.setText(s.artist);
+        txtMusicTags.setText(s.tag);
+        txtMusicRating.setText(Integer.toString(s.rating));
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -296,6 +335,8 @@ public class MainJFrame extends javax.swing.JFrame {
     }
     
     private Queries queries = new Queries();
+    private String email;
+    private String password;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntLast;
@@ -304,7 +345,6 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnInit;
     private javax.swing.JButton btnLoadImage;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JTextField btnMusicArtist;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private javax.swing.JButton btnQuit;
@@ -314,6 +354,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator sepLoginArea;
     private javax.swing.JTextField txtLoginEmail;
     private javax.swing.JTextField txtLoginPassword;
+    private javax.swing.JTextField txtMusicArtist;
     private javax.swing.JTextField txtMusicPlay;
     private javax.swing.JTextField txtMusicRating;
     private javax.swing.JTextField txtMusicTags;

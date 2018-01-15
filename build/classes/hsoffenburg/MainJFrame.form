@@ -75,7 +75,7 @@
                                   <Component id="txtMusicPlay" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="btnMusicArtist" max="32767" attributes="0"/>
+                          <Component id="txtMusicArtist" max="32767" attributes="0"/>
                           <Component id="txtMusicTitle" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -126,7 +126,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="txtMusicTitle" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnMusicArtist" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtMusicArtist" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="txtMusicTags" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -214,6 +214,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="First"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFirstActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="bntLast">
       <Properties>
@@ -234,7 +237,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtMusicTitle">
     </Component>
-    <Component class="javax.swing.JTextField" name="btnMusicArtist">
+    <Component class="javax.swing.JTextField" name="txtMusicArtist">
     </Component>
     <Component class="javax.swing.JTextField" name="txtMusicTags">
     </Component>
