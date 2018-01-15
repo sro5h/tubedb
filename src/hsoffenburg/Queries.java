@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class Queries {
     private static final String TAG = Queries.class.getName();
     private static final int POSITION_LAST = -1;
+    private static final int POSITION_FIRST = 1;
 
     public int count() {
         int count = 0;
@@ -223,6 +224,10 @@ public class Queries {
             
             results = statement.executeQuery(query);
             
+            if (position == POSITION_FIRST) {
+                results.first();
+            }
+            
             if (position == POSITION_LAST) {
                 results.last();
                 
@@ -230,6 +235,63 @@ public class Queries {
                 if (results.absolute(position + 1)) {
                     ++position;
                     
+                } else {
+                    results.absolute(position);
+                }
+            }
+            
+            return resultsetToSong(results);
+            
+    } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "First query failed", e);
+
+        } finally {
+            try {
+                if (results != null) {
+                    results.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+
+            } catch (SQLException e) {
+                Logger.getLogger(TAG)
+                        .log(Level.SEVERE, "Cleanup failed", e);
+            }
+        }
+        
+        return null;
+    }
+    
+    public Song previous(String email) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet results = null;
+
+        try {
+            connection = Globals.getPoolConnection();
+            statement = createStatement(connection);
+            
+            String query = getSongQuery(email);
+            System.out.println("Query: " + query);
+            
+            results = statement.executeQuery(query);
+            
+            if (position == POSITION_LAST) {
+                results.last();   
+            }
+            
+            if (position == POSITION_FIRST) {
+                results.first();
+                
+            } else {
+                if (results.absolute(position - 1)) {
+                    --position;
+
                 } else {
                     results.absolute(position);
                 }
