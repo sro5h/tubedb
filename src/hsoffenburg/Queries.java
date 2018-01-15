@@ -341,6 +341,7 @@ public class Queries {
             s.artist = set.getString(3);
             s.tag = set.getString(4);
             s.rating = set.getInt(5);
+            s.cover = Converter.Blob2Icon(set.getBlob(6));
             
             return s;
         

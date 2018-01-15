@@ -339,6 +339,10 @@ public class MainJFrame extends javax.swing.JFrame {
         txtMusicArtist.setText(s.artist);
         txtMusicTags.setText(s.tag);
         txtMusicRating.setText(Integer.toString(s.rating));
+        
+        if (s.cover != null) {
+            lblImageView.setIcon(s.cover);
+        }
     }
     
     /**
