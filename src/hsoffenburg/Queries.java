@@ -19,6 +19,7 @@ import java.util.logging.Logger;
  */
 public class Queries {
     private static final String TAG = Queries.class.getName();
+    private static final int POSITION_LAST = -1;
 
     public int count() {
         int count = 0;
@@ -143,6 +144,7 @@ public class Queries {
             results = statement.executeQuery(query);
             
             results.first();
+            position = 1;
             return resultsetToSong(results);
             
         } catch (SQLException e) {
@@ -179,6 +181,7 @@ public class Queries {
             results = statement.executeQuery(query);
 
             results.last();
+            position = POSITION_LAST;
             return resultsetToSong(results);
 
         } catch (SQLException e) {
@@ -203,6 +206,59 @@ public class Queries {
             }
         }
 
+        return null;
+    }
+    
+    public Song next(String email) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet results = null;
+
+        try {
+            connection = Globals.getPoolConnection();
+            statement = createStatement(connection);
+            
+            String query = getSongQuery(email);
+            System.out.println("Query: " + query);
+            
+            results = statement.executeQuery(query);
+            
+            if (position == POSITION_LAST) {
+                results.last();
+                
+            } else {
+                if (results.absolute(position + 1)) {
+                    ++position;
+                    
+                } else {
+                    results.absolute(position);
+                }
+            }
+            
+            return resultsetToSong(results);
+            
+    } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "First query failed", e);
+
+        } finally {
+            try {
+                if (results != null) {
+                    results.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+
+            } catch (SQLException e) {
+                Logger.getLogger(TAG)
+                        .log(Level.SEVERE, "Cleanup failed", e);
+            }
+        }
+        
         return null;
     }
     
@@ -238,4 +294,6 @@ public class Queries {
         return connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
     }
+    
+    private int position = 1;
 }

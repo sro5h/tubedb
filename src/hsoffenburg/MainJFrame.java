@@ -119,6 +119,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btnNext.setText("Next");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
         btnPrevious.setText("Previous");
 
@@ -289,6 +294,15 @@ public class MainJFrame extends javax.swing.JFrame {
         Song s = queries.last(email);
         displaySong(s);
     }//GEN-LAST:event_bntLastActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        if (!checkLoginData()) {
+            return;
+        }
+        
+        Song s = queries.next(email);
+        displaySong(s);
+    }//GEN-LAST:event_btnNextActionPerformed
 
     private boolean checkLoginData() {
         if (email != null && !email.isEmpty()
