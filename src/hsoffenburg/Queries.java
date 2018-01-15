@@ -164,6 +164,48 @@ public class Queries {
         return null;
     }
     
+    public Song last(String email) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet results = null;
+
+        try {
+            connection = Globals.getPoolConnection();
+            statement = createStatement(connection);
+
+            String query = getSongQuery(email);
+            System.out.println("Query: " + query);
+
+            results = statement.executeQuery(query);
+
+            results.last();
+            return resultsetToSong(results);
+
+        } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "First query failed", e);
+
+        } finally {
+            try {
+                if (results != null) {
+                    results.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+
+            } catch (SQLException e) {
+                Logger.getLogger(TAG)
+                        .log(Level.SEVERE, "Cleanup failed", e);
+            }
+        }
+
+        return null;
+    }
+    
     private String getSongQuery(String email) {
         String query = "";
         query += "SELECT t.url, m.title, m.artist, t.tag, t.gefallen, m.cover ";
