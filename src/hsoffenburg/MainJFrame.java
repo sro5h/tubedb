@@ -53,6 +53,7 @@ public class MainJFrame extends javax.swing.JFrame {
         txtMusicTags = new javax.swing.JTextField();
         txtMusicPlay = new javax.swing.JTextField();
         txtMusicRating = new javax.swing.JTextField();
+        btnSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -136,6 +137,13 @@ public class MainJFrame extends javax.swing.JFrame {
 
         txtMusicRating.setText("Bewertung");
 
+        btnSave.setText("save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -185,7 +193,9 @@ public class MainJFrame extends javax.swing.JFrame {
                             .addComponent(txtMusicArtist)
                             .addComponent(txtMusicTitle))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSave, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -213,7 +223,8 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addComponent(btnFirst)
                     .addComponent(bntLast)
                     .addComponent(btnNext)
-                    .addComponent(btnPrevious))
+                    .addComponent(btnPrevious)
+                    .addComponent(btnSave))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -318,6 +329,17 @@ public class MainJFrame extends javax.swing.JFrame {
         displaySong(s);
     }//GEN-LAST:event_btnPreviousActionPerformed
 
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if (!checkLoginData()) {
+            return;
+        }
+        
+        Song s = retrieveSong();
+        if (!queries.save(email, s)) {
+            lblInfo.setText("Saving failed");
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
     private boolean checkLoginData() {
         if (email != null && !email.isEmpty()
                 && password != null && !password.isEmpty()) {
@@ -343,6 +365,19 @@ public class MainJFrame extends javax.swing.JFrame {
         if (s.cover != null) {
             lblImageView.setIcon(s.cover);
         }
+    }
+    
+    private Song retrieveSong() {
+        Song s = new Song();
+        
+        s.url = txtMusicUrl.getText();
+        s.title = txtMusicTitle.getText();
+        s.artist = txtMusicArtist.getText();
+        s.tag = txtMusicTags.getText();
+        s.rating = Integer.parseInt(txtMusicRating.getText());
+        s.cover = lblImageView.getIcon();
+        
+        return s;
     }
     
     /**
@@ -395,6 +430,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnPrevious;
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnRegister;
+    private javax.swing.JButton btnSave;
     private javax.swing.JLabel lblImageView;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JSeparator sepLoginArea;
