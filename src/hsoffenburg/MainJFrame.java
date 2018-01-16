@@ -175,7 +175,15 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
-        txtMusicRating.setToolTipText("Bewertung");
+        txtMusicUrl.setToolTipText("Url");
+
+        txtMusicTitle.setToolTipText("Title");
+
+        txtMusicArtist.setToolTipText("Artist");
+
+        txtMusicTags.setToolTipText("Tags");
+
+        txtMusicRating.setToolTipText("Rating");
 
         btnSave.setText("save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -191,8 +199,12 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
+        txtSearchTag.setToolTipText("Search a tag");
+
+        edtTagResults.setToolTipText("Search results");
         jScrollPane1.setViewportView(edtTagResults);
 
+        edtPlay.setToolTipText("Play song");
         jScrollPane2.setViewportView(edtPlay);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
