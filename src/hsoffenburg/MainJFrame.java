@@ -6,23 +6,51 @@
 
 package hsoffenburg;
 
+import java.awt.Desktop;
 import java.awt.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 /**
  *
  * @author ubuntu
  */
 public class MainJFrame extends javax.swing.JFrame {
+    private static final String TAG = MainJFrame.class.getName();
 
     /**
      * Creates new form NewJFrame
      */
     public MainJFrame() {
         initComponents();
+        
         // Disable resizing
         setResizable(false);
+        
+        HyperlinkListener listener = new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent event) {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED
+                        && Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().browse(event.getURL().toURI());
+                        
+                    } catch (Exception e) {
+                        Logger.getLogger(TAG)
+                                .log(Level.SEVERE, "Could not open url", e);
+                    }
+                }
+            }
+        };
+        
+        edtTagResults.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
+        edtTagResults.setEditable(false);
+        edtTagResults.addHyperlinkListener(listener);
     }
 
     /**
@@ -56,6 +84,11 @@ public class MainJFrame extends javax.swing.JFrame {
         txtMusicPlay = new javax.swing.JTextField();
         txtMusicRating = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
+        bntSearch = new javax.swing.JButton();
+        txtSearchTag = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        edtTagResults = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -137,7 +170,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         txtMusicPlay.setText("Play");
 
-        txtMusicRating.setText("Bewertung");
+        txtMusicRating.setToolTipText("Bewertung");
 
         btnSave.setText("save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -146,15 +179,26 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
+        bntSearch.setText("search");
+        bntSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntSearchActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(edtTagResults);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sepLoginArea)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jSeparator1)
+                    .addComponent(sepLoginArea, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnQuit)
@@ -173,7 +217,7 @@ public class MainJFrame extends javax.swing.JFrame {
                                 .addComponent(btnLogin)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnRegister))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,9 +242,12 @@ public class MainJFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSave, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnLoadImage, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtSearchTag)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnLoadImage, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(bntSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -244,7 +291,15 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addComponent(lblImageView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLoadImage)
-                .addContainerGap(271, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bntSearch)
+                    .addComponent(txtSearchTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -342,6 +397,17 @@ public class MainJFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void bntSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSearchActionPerformed
+        if (!checkLoginData()) {
+            return;
+        }
+        
+        String tag = txtSearchTag.getText();
+        
+        String results = queries.searchTag(email, tag);
+        edtTagResults.setText(results);
+    }//GEN-LAST:event_bntSearchActionPerformed
+
     private boolean checkLoginData() {
         if (email != null && !email.isEmpty()
                 && password != null && !password.isEmpty()) {
@@ -433,6 +499,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntLast;
+    private javax.swing.JButton bntSearch;
     private javax.swing.JButton btnCount;
     private javax.swing.JButton btnFirst;
     private javax.swing.JButton btnInit;
@@ -443,6 +510,9 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnSave;
+    private javax.swing.JEditorPane edtTagResults;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblImageView;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JSeparator sepLoginArea;
@@ -454,5 +524,6 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtMusicTags;
     private javax.swing.JTextField txtMusicTitle;
     private javax.swing.JTextField txtMusicUrl;
+    private javax.swing.JTextField txtSearchTag;
     // End of variables declaration//GEN-END:variables
 }

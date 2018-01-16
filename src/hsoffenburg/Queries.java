@@ -410,12 +410,68 @@ public class Queries {
         
         return false;
     }
+    
+    public String searchTag(String email, String tag) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet results = null;
+        
+        try {
+            connection = Globals.getPoolConnection();
+            statement = connection.createStatement();
+            
+            String query = getTagQuery(email, tag);
+            System.out.println("Query: " + query);
+            
+            results = statement.executeQuery(query);
+            
+            String rc = "";
+            while (results.next()) {
+                rc += resultsetToUrl(results);
+            }
+            
+            return rc;
+            
+        } catch (SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "First query failed", e);
+
+        } finally {
+            try {
+                if (results != null) {
+                    results.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+
+            } catch (SQLException e) {
+                Logger.getLogger(TAG)
+                        .log(Level.SEVERE, "Cleanup failed", e);
+            }
+        }
+        
+        return "";
+    }
 
     private String getSongQuery(String email) {
         String query = "";
         query += "SELECT t.url, m.title, m.artist, t.tag, t.gefallen, m.cover ";
         query += "FROM tags t, musics m ";
         query += "WHERE t.email = '" + email + "' and t.url = m.url";
+        
+        return query;
+    }
+    
+    private String getTagQuery(String email, String tag) {
+        String query = "";
+        query += "SELECT t.url, m.title, m.artist ";
+        query += "FROM tags t, musics m ";
+        query += "WHERE t.url = m.url AND t.email = '" + email + "' ";
+        query += "AND t.tag like '%" + tag + "%'";
         
         return query;
     }
@@ -510,6 +566,22 @@ public class Queries {
         }
         
         return null;
+    }
+    
+    private String resultsetToUrl(ResultSet set) {
+        try {
+            String url = "<a href='" + set.getString(1) + "'>";
+            url += set.getString(2) + " - " + set.getString(3);
+            url += "</a><br>";
+
+            return url;
+        
+        } catch(SQLException e) {
+            Logger.getLogger(TAG)
+                    .log(Level.SEVERE, "Could not convert the set to a html url");
+        }
+        
+        return "";
     }
     
     private Statement createStatement(Connection connection) throws SQLException {
