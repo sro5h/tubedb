@@ -51,6 +51,11 @@ public class MainJFrame extends javax.swing.JFrame {
         edtTagResults.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
         edtTagResults.setEditable(false);
         edtTagResults.addHyperlinkListener(listener);
+        
+        edtPlay.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
+        edtPlay.setEditable(false);
+        edtPlay.addHyperlinkListener(listener);
+        edtPlay.setText("Play");
     }
 
     /**
@@ -81,7 +86,6 @@ public class MainJFrame extends javax.swing.JFrame {
         txtMusicTitle = new javax.swing.JTextField();
         txtMusicArtist = new javax.swing.JTextField();
         txtMusicTags = new javax.swing.JTextField();
-        txtMusicPlay = new javax.swing.JTextField();
         txtMusicRating = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
         bntSearch = new javax.swing.JButton();
@@ -89,6 +93,8 @@ public class MainJFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         edtTagResults = new javax.swing.JEditorPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        edtPlay = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -168,8 +174,6 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
-        txtMusicPlay.setText("Play");
-
         txtMusicRating.setToolTipText("Bewertung");
 
         btnSave.setText("save");
@@ -188,6 +192,8 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(edtTagResults);
 
+        jScrollPane2.setViewportView(edtPlay);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -195,7 +201,7 @@ public class MainJFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
                     .addComponent(sepLoginArea, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -221,7 +227,6 @@ public class MainJFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtMusicUrl)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(btnFirst)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -233,11 +238,13 @@ public class MainJFrame extends javax.swing.JFrame {
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addComponent(txtMusicTags))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtMusicRating)
-                                    .addComponent(txtMusicPlay)))
+                                .addComponent(txtMusicRating, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtMusicArtist)
-                            .addComponent(txtMusicTitle))
+                            .addComponent(txtMusicTitle)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(txtMusicUrl)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -277,9 +284,9 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtMusicUrl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMusicPlay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtMusicTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -395,6 +402,8 @@ public class MainJFrame extends javax.swing.JFrame {
         if (!queries.save(email, s)) {
             lblInfo.setText("Saving failed");
         }
+        
+        updatePlayLink(s.url);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void bntSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSearchActionPerformed
@@ -433,6 +442,13 @@ public class MainJFrame extends javax.swing.JFrame {
         if (s.cover != null) {
             lblImageView.setIcon(adjustIcon(s.cover));
         }
+        
+        updatePlayLink(s.url);
+    }
+    
+    private void updatePlayLink(String url) {
+        String link = "<a href='" + url + "'>Play</a>";
+        edtPlay.setText(link);
     }
     
     private Song retrieveSong() {
@@ -510,8 +526,10 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnQuit;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnSave;
+    private javax.swing.JEditorPane edtPlay;
     private javax.swing.JEditorPane edtTagResults;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblImageView;
     private javax.swing.JLabel lblInfo;
@@ -519,7 +537,6 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtLoginEmail;
     private javax.swing.JTextField txtLoginPassword;
     private javax.swing.JTextField txtMusicArtist;
-    private javax.swing.JTextField txtMusicPlay;
     private javax.swing.JTextField txtMusicRating;
     private javax.swing.JTextField txtMusicTags;
     private javax.swing.JTextField txtMusicTitle;
