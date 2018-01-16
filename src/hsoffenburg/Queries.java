@@ -333,12 +333,12 @@ public class Queries {
 
         try {
             connection = Globals.getPoolConnection();
-            statement = createMutableStatement(connection);
+            statement = createStatement(connection);
             
-            String query = getSongExistsQuery(song);
-            System.out.println("Query: " + query);
+            String songQuery = getSongExistsQuery(song);
+            System.out.println("Query: " + songQuery);
             
-            results = statement.executeQuery(query);
+            results = statement.executeQuery(songQuery);
             
             // Does song exist
             if (results.next()) {
@@ -350,6 +350,31 @@ public class Queries {
 
             } else {
                 preStatement = getMusicsInsert(connection, song);
+                preStatement.execute();
+                
+                preStatement.close();
+                preStatement = null;
+            }
+            
+            results.close();
+            statement.close();
+            
+            statement = createStatement(connection);
+                 
+            String tagQuery = getTagsExistsQuery(email, song);
+            System.out.println("Tag query: " + tagQuery);
+            
+            results = statement.executeQuery(tagQuery);
+            
+            if (results.next()) {
+                preStatement = getTagUpdate(connection, email, song);
+                preStatement.execute();
+                
+                preStatement.close();
+                preStatement = null;
+                
+            } else {
+                preStatement = getTagInsert(connection, email, song);
                 preStatement.execute();
                 
                 preStatement.close();
@@ -403,6 +428,15 @@ public class Queries {
 
         return query;
     }
+
+    private String getTagsExistsQuery(String email, Song s) {
+        String query = "";
+        query += "SELECT * ";
+        query += "FROM tags ";
+        query += "WHERE email = '" + email + "' and url = '" + s.url + "'";
+        
+        return query;
+    }
     
     private PreparedStatement getMusicsInsert(Connection c, Song s) throws SQLException {
         String insert = "";
@@ -431,6 +465,33 @@ public class Queries {
         return st;
     }
     
+    private PreparedStatement getTagUpdate(Connection c, String email, Song s) throws SQLException {
+        String update = "";
+        update += "UPDATE tags ";
+        update += "SET gefallen = ?, tag = '" + s.tag + "'";
+        update += "WHERE url = '" + s.url + "' and email = '" + email + "'";
+        
+        System.out.println("Tag update: " + update);
+        
+        PreparedStatement st = c.prepareStatement(update);
+        st.setInt(1, s.rating);
+        
+        return st;
+    }
+    
+    private PreparedStatement getTagInsert(Connection c, String email, Song s) throws SQLException {
+        String insert = "";
+        insert += "INSERT INTO tags ";
+        insert += "VALUES( '" + email + "', '" + s.url + "', ?, '" + s.tag + "')";
+        
+        System.out.println("Tag insert: " + insert);
+        
+        PreparedStatement st = c.prepareStatement(insert);
+        st.setInt(1, s.rating);
+        
+        return st;
+    }
+    
     private Song resultsetToSong(ResultSet set) {
         try {
             Song s = new Song();
@@ -454,10 +515,6 @@ public class Queries {
     private Statement createStatement(Connection connection) throws SQLException {
         return connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
-    }
-    
-    private Statement createMutableStatement(Connection connection) throws SQLException {
-        return connection.createStatement();
     }
     
     private int position = 1;
