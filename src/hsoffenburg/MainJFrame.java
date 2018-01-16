@@ -6,7 +6,9 @@
 
 package hsoffenburg;
 
+import java.awt.Image;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -263,7 +265,7 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCountActionPerformed
 
     private void btnLoadImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadImageActionPerformed
-        Icon icon = Converter.loadIconFromFile();
+        Icon icon = adjustIcon(Converter.loadIconFromFile());
         lblImageView.setIcon(icon);
     }//GEN-LAST:event_btnLoadImageActionPerformed
 
@@ -363,7 +365,7 @@ public class MainJFrame extends javax.swing.JFrame {
         txtMusicRating.setText(Integer.toString(s.rating));
         
         if (s.cover != null) {
-            lblImageView.setIcon(s.cover);
+            lblImageView.setIcon(adjustIcon(s.cover));
         }
     }
     
@@ -378,6 +380,16 @@ public class MainJFrame extends javax.swing.JFrame {
         s.cover = lblImageView.getIcon();
         
         return s;
+    }
+    
+    private Icon adjustIcon(Icon icon) {
+        if (icon == null) {
+            return null;
+        }
+        
+       Image image = ((ImageIcon)icon).getImage();
+       image = image.getScaledInstance(130, 130, java.awt.Image.SCALE_SMOOTH);
+       return new ImageIcon(image);
     }
     
     /**
@@ -415,7 +427,7 @@ public class MainJFrame extends javax.swing.JFrame {
         });
     }
     
-    private Queries queries = new Queries();
+    private final Queries queries = new Queries();
     private String email;
     private String password;
 
