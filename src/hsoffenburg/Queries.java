@@ -443,7 +443,7 @@ public class Queries {
         insert += "INSERT INTO musics ";
         insert += "VALUES( '" + s.url + "', '" + s.title + "', '" + s.artist + "', ? )";
         
-        System.out.println("Musics insert: " + insert);
+        System.out.println("Song insert: " + insert);
         
         PreparedStatement st = c.prepareStatement(insert);
         st.setBlob(1, Converter.Icon2Blob(s.cover, c));
@@ -457,7 +457,7 @@ public class Queries {
         update += "SET title = '" + s.title + "', artist = '" + s.artist + "', cover = ? ";
         update += "WHERE url = '" + s.url + "'";
         
-        System.out.println("Musics update: " + update);
+        System.out.println("Song update: " + update);
         
         PreparedStatement st = c.prepareStatement(update);
         st.setBlob(1, Converter.Icon2Blob(s.cover, c));
