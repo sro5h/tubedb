@@ -55,7 +55,8 @@ public class MainJFrame extends javax.swing.JFrame {
         edtPlay.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
         edtPlay.setEditable(false);
         edtPlay.addHyperlinkListener(listener);
-        edtPlay.setText("Play");
+        
+        resetViews();
     }
 
     /**
@@ -332,13 +333,17 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoadImageActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String email = txtLoginEmail.getText();
-        String password = txtLoginPassword.getText();
+        resetViews();
+        email = null;
+        password = null;
         
-        if (queries.login(email, password)) {
+        String newEmail = txtLoginEmail.getText();
+        String newPassword = txtLoginPassword.getText();
+        
+        if (queries.login(newEmail, newPassword)) {
             lblInfo.setText("Login successful");
-            this.email = email;
-            this.password = password;
+            email = newEmail;
+            password = newPassword;
             
         } else {
             lblInfo.setText("Login failed");
@@ -346,10 +351,14 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        String email = txtLoginEmail.getText();
-        String password = txtLoginPassword.getText();
+        resetViews();
+        email = null;
+        password = null;
         
-        if (queries.register(email, password)) {
+        String newEmail = txtLoginEmail.getText();
+        String newPassword = txtLoginPassword.getText();
+        
+        if (queries.register(newEmail, newPassword)) {
             lblInfo.setText("Registered successfully");
             
         } else {
@@ -438,12 +447,22 @@ public class MainJFrame extends javax.swing.JFrame {
         txtMusicArtist.setText(s.artist);
         txtMusicTags.setText(s.tag);
         txtMusicRating.setText(Integer.toString(s.rating));
-        
-        if (s.cover != null) {
-            lblImageView.setIcon(adjustIcon(s.cover));
-        }
+        lblImageView.setIcon(adjustIcon(s.cover));
         
         updatePlayLink(s.url);
+    }
+    
+    private void resetViews() {
+        txtMusicUrl.setText("");
+        txtMusicTitle.setText("");
+        txtMusicArtist.setText("");
+        txtMusicTags.setText("");
+        txtMusicRating.setText("");
+        lblImageView.setIcon(null);
+        edtPlay.setText("Play");
+        
+        txtSearchTag.setText("");
+        edtTagResults.setText("");
     }
     
     private void updatePlayLink(String url) {
