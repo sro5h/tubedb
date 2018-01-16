@@ -342,14 +342,14 @@ public class Queries {
             
             // Does song exist
             if (results.next()) {
-                preStatement = getMusicsUpdate(connection, song);
+                preStatement = getSongUpdate(connection, song);
                 preStatement.execute();
                 
                 preStatement.close();
                 preStatement = null;
 
             } else {
-                preStatement = getMusicsInsert(connection, song);
+                preStatement = getSongInsert(connection, song);
                 preStatement.execute();
                 
                 preStatement.close();
@@ -438,7 +438,7 @@ public class Queries {
         return query;
     }
     
-    private PreparedStatement getMusicsInsert(Connection c, Song s) throws SQLException {
+    private PreparedStatement getSongInsert(Connection c, Song s) throws SQLException {
         String insert = "";
         insert += "INSERT INTO musics ";
         insert += "VALUES( '" + s.url + "', '" + s.title + "', '" + s.artist + "', ? )";
@@ -451,7 +451,7 @@ public class Queries {
         return st;
     }
     
-    private PreparedStatement getMusicsUpdate(Connection c, Song s) throws SQLException {
+    private PreparedStatement getSongUpdate(Connection c, Song s) throws SQLException {
         String update = "";
         update += "UPDATE musics ";
         update += "SET title = '" + s.title + "', artist = '" + s.artist + "', cover = ? ";
